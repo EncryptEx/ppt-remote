@@ -59,7 +59,7 @@ export default function PresentPage() {
       const dataUrl = await QRCode.toDataURL(url, {
         width: 180,
         margin: 1,
-        color: { dark: "#111827", light: "#ffffff" },
+        color: { dark: "#202020", light: "#ffffff" },
       });
       setQrDataUrl(dataUrl);
     };
@@ -134,11 +134,11 @@ export default function PresentPage() {
 
   if (notFound) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">
-        <div className="text-center">
-          <p className="text-lg font-medium mb-2">Session not found</p>
-          <p className="text-sm text-zinc-600">This presentation may have expired.</p>
-          <Link href="/" className="mt-4 inline-block text-indigo-400 hover:text-indigo-300 text-sm">← Back to home</Link>
+      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
+        <div className="text-center bg-card border-2 border-border rounded-[var(--radius)] p-8 shadow-neo">
+          <p className="text-lg font-bold text-foreground mb-2">Session not found</p>
+          <p className="text-sm text-muted-foreground mb-4">This presentation may have expired.</p>
+          <Link href="/" className="inline-block text-primary font-bold underline underline-offset-2 text-sm hover:opacity-80">← Back to home</Link>
         </div>
       </div>
     );
@@ -146,8 +146,8 @@ export default function PresentPage() {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <svg className="animate-spin w-8 h-8 text-zinc-600" fill="none" viewBox="0 0 24 24">
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <svg className="animate-spin w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -157,12 +157,12 @@ export default function PresentPage() {
 
   return (
     <div
-      className="h-screen bg-zinc-950 flex flex-col select-none overflow-hidden"
+      className="h-screen flex flex-col select-none overflow-hidden"
       onMouseMove={resetControlsTimer}
       onClick={resetControlsTimer}
     >
-      {/* Slide area — fills all available height above the controls bar */}
-      <div className="flex-1 relative" style={{ minHeight: 0 }}>
+      {/* Slide area — always dark for best presentation visibility */}
+      <div className="flex-1 relative bg-[#0a0a0a]" style={{ minHeight: 0 }}>
         <div className="absolute inset-0">
           {session.fileType === "pdf" ? (
             <PDFViewer sessionId={id} currentSlide={currentSlide} onTotalSlides={handleTotalSlides} />
@@ -174,17 +174,17 @@ export default function PresentPage() {
 
       {/* Controls bar (auto-hides) */}
       <div
-        className={`flex-shrink-0 flex items-center justify-between px-6 py-3 bg-zinc-900/90 border-t border-zinc-800 backdrop-blur transition-opacity duration-300 ${showControls ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        className={`flex-shrink-0 flex items-center justify-between px-6 py-3 bg-card border-t-2 border-border transition-opacity duration-300 ${showControls ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       >
         {/* File name */}
-        <span className="text-sm text-zinc-500 truncate max-w-xs hidden sm:block">{session.fileName}</span>
+        <span className="text-sm text-muted-foreground font-medium truncate max-w-xs hidden sm:block">{session.fileName}</span>
 
         {/* Navigation */}
         <div className="flex items-center gap-4 mx-auto">
           <button
             onClick={() => navigate("prev")}
             disabled={currentSlide <= 1}
-            className="p-2 rounded-lg hover:bg-zinc-800 disabled:opacity-30 text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="p-2 rounded-[var(--radius)] hover:bg-secondary disabled:opacity-30 text-muted-foreground hover:text-foreground transition-colors border-2 border-transparent hover:border-border"
             aria-label="Previous slide"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -192,14 +192,14 @@ export default function PresentPage() {
             </svg>
           </button>
 
-          <span className="text-sm font-medium text-zinc-300 tabular-nums w-20 text-center">
+          <span className="text-sm font-bold text-foreground tabular-nums w-20 text-center">
             {currentSlide} / {totalSlides || "—"}
           </span>
 
           <button
             onClick={() => navigate("next")}
             disabled={totalSlides > 0 && currentSlide >= totalSlides}
-            className="p-2 rounded-lg hover:bg-zinc-800 disabled:opacity-30 text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="p-2 rounded-[var(--radius)] hover:bg-secondary disabled:opacity-30 text-muted-foreground hover:text-foreground transition-colors border-2 border-transparent hover:border-border"
             aria-label="Next slide"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,7 +212,7 @@ export default function PresentPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowQR((v) => !v)}
-            className="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="p-2 rounded-[var(--radius)] hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors border-2 border-transparent hover:border-border"
             title="Show QR code for remote"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -222,7 +222,7 @@ export default function PresentPage() {
           </button>
           <button
             onClick={() => document.documentElement.requestFullscreen?.()}
-            className="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 transition-colors hidden sm:flex"
+            className="p-2 rounded-[var(--radius)] hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors border-2 border-transparent hover:border-border hidden sm:flex"
             title="Fullscreen (F)"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -236,24 +236,24 @@ export default function PresentPage() {
       {/* QR overlay */}
       {showQR && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+          className="fixed inset-0 bg-foreground/40 backdrop-blur-sm flex items-center justify-center z-50"
           onClick={() => setShowQR(false)}
         >
           <div
-            className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 flex flex-col items-center gap-4 shadow-2xl"
+            className="bg-card border-2 border-border rounded-[var(--radius)] p-6 flex flex-col items-center gap-4 shadow-neo"
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="text-sm font-medium text-zinc-300">Scan to open the remote</p>
+            <p className="text-sm font-bold text-foreground">Scan to open the remote</p>
             {qrDataUrl && (
-              <div className="bg-white rounded-xl p-3">
+              <div className="bg-white border-2 border-foreground rounded-[var(--radius)] p-3 shadow-neo-sm">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={qrDataUrl} alt="Remote QR" width={180} height={180} />
               </div>
             )}
-            <p className="text-xs text-zinc-600 font-mono">{typeof window !== "undefined" ? `${window.location.origin}/remote/${id}` : ""}</p>
+            <p className="text-xs text-muted-foreground font-mono">{typeof window !== "undefined" ? `${window.location.origin}/remote/${id}` : ""}</p>
             <button
               onClick={() => setShowQR(false)}
-              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+              className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors border-2 border-border px-3 py-1 rounded-[var(--radius)] hover:bg-secondary"
             >
               Close
             </button>
